@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-package yourip;
-
 import bt.Bt;
 import bt.data.Storage;
 import bt.data.file.FileSystemStorage;
 import bt.dht.DHTConfig;
 import bt.dht.DHTModule;
-import bt.dht.DHTPeerSource;
 import bt.net.InetPeer;
 import bt.net.Peer;
 import bt.runtime.BtClient;
@@ -29,32 +26,11 @@ import bt.runtime.Config;
 import com.google.inject.Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import yourip.mock.MockModule;
-import yourip.mock.MockStorage;
-import yourip.mock.MockTorrent;
-
-import java.net.InetAddress;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Duration;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 public class Main {
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
-    private static final int[] ports = new int[]{6891, 6892};
-    private static final Set<Peer> peers = new HashSet<Peer>() {{
-        for (int port : ports) {
-            add(InetPeer.build(InetAddress.getLoopbackAddress(), port));
-        }
-    }};
-
-    public static Set<Peer> peers() {
-        return Collections.unmodifiableSet(peers);
-    }
 
     public static void main(String[] args) throws InterruptedException {
         LOGGER.debug("system property----------------------------" + System.getProperty("java.class.path"));
@@ -94,36 +70,5 @@ public class Main {
         client.startAsync().join();
     }
 
-    private static BtClient buildClient(int port) {
-        Config config = new Config() {
-            @Override
-            public InetAddress getAcceptorAddress() {
-                return InetAddress.getLoopbackAddress();
-            }
-
-            @Override
-            public int getAcceptorPort() {
-                return port;
-            }
-
-            @Override
-            public Duration getPeerDiscoveryInterval() {
-                return Duration.ofSeconds(1);
-            }
-
-            @Override
-            public Duration getTrackerQueryInterval() {
-                return Duration.ofSeconds(1);
-            }
-        };
-
-        return Bt.client()
-                .config(config)
-                .module(YourIPModule.class)
-                .module(MockModule.class)
-                .storage(new MockStorage())
-                .torrent(() -> new MockTorrent())
-                .build();
-    }
 
 }
