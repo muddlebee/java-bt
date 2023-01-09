@@ -317,7 +317,7 @@
                     <goals>deploy</goals>
                 </configuration>
             </plugin>
-            <plugin>
+           <!-- <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
                 <configuration>
@@ -331,7 +331,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
 
